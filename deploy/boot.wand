@@ -36,13 +36,25 @@ let keys! () = (
   FS.copy! /app/known_hosts (Path.join ssh ./known_hosts)
 )
 
+-- The checkout up to the repo. The server commits the world as it stops,
+-- and cannot push it when the repo has a new wand.pkg, so the commits here
+-- are put after the repo's. If they meet a change to the same file, it
+-- starts on the checkout as it is, and the server pushes them to the
+-- branch wmd-server, for a person to merge.
+let _up_to_repo () = (
+  let git c = Shell.run (Shell.in_dir checkout c);
+  let _ = git $*(git fetch --quiet);
+  match git $*(git -c user.name=wmd -c user.email=wmd rebase --autostash --quiet @{u}) with
+  | Ok _ -> IO.println "boot: the checkout is up to the repo"
+  | Error why -> (
+    let _ = git $*(git rebase --abort);
+    IO.println_err
+      "boot: did not come up to the repo, and the server starts on the checkout as it is: %{why}"
+  )
+)
+
 let checkout! () =
-  if FS.exists? (Path.join checkout ./.git) then
-    match Shell.run (Shell.in_dir checkout $*(git pull --ff-only --quiet)) with
-    | Ok _ -> IO.println "boot: the checkout is up to the repo"
-    | Error why ->
-      IO.println_err
-        "boot: did not pull, and the server starts on the checkout as it is: %{why}"
+  if FS.exists? (Path.join checkout ./.git) then _up_to_repo ()
   else (
     Shell.run! $*(git clone --quiet %{repo} %{checkout});
     IO.println "boot: cloned %{repo}"
