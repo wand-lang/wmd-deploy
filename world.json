@@ -1,0 +1,118 @@
+{
+  "version": 2,
+  "accounts": [
+    {
+      "name": "Mark",
+      "body": "/std/player#0",
+      "password": "hmac-sha256$ac0e473cc5e0763104e92e0fe980f11d$6e51d62a5fc601865eba3b80046ca70260c7a4cb0781fa594360eee97c7142bd",
+      "role": "keymaster",
+      "created": "2026-10-01T22:27:45Z",
+      "inspiration": { "amount": 1000, "at": "1970-01-01T00:00:00Z" },
+      "explored": {},
+      "notices": [],
+      "paused": false,
+      "banned": []
+    }
+  ],
+  "instances": [
+    {
+      "id": "/std/login#0",
+      "blueprint": "/std/login",
+      "state": null,
+      "created": "2026-10-01T22:27:45Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/r/square#0",
+      "blueprint": "/r/square",
+      "state": null,
+      "created": "2026-10-01T22:27:45Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/r/lever#0",
+      "blueprint": "/r/lever",
+      "env": "/r/square#0",
+      "state": { "pulls": 0 },
+      "creator": "/r/square#0",
+      "created": "2026-10-01T22:27:45Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/r#0",
+      "blueprint": "/r",
+      "state": null,
+      "created": "2026-10-01T22:27:45Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/r/editor#0",
+      "blueprint": "/r/editor",
+      "state": null,
+      "created": "2026-10-01T22:27:45Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/r/home#0",
+      "blueprint": "/r/home",
+      "state": null,
+      "created": "2026-10-01T22:27:45Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/r/learning#0",
+      "blueprint": "/r/learning",
+      "state": null,
+      "created": "2026-10-01T22:27:45Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/r/rules#0",
+      "blueprint": "/r/rules",
+      "state": null,
+      "created": "2026-10-01T22:27:45Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/std/player#0",
+      "blueprint": "/std/player",
+      "env": "/r/square#0",
+      "state": { "name": "Mark" },
+      "created": "2026-10-01T22:27:45Z",
+      "owner": "mark",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    }
+  ],
+  "flags": [],
+  "callouts": [],
+  "requests": [],
+  "adopted": {},
+  "built": {}
+}

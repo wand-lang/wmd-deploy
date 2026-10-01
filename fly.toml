@@ -1,0 +1,33 @@
+# The game on Fly: one machine, with the game's checkout on its volume.
+app = "wmd-gg"
+primary_region = "iad"
+
+# The server saves the world and pushes to the repo as it stops.
+kill_signal = "SIGTERM"
+kill_timeout = "30s"
+
+[build]
+
+[mounts]
+  source = "wmd_data"
+  destination = "/data"
+
+# Telnet: port 23 outside, the server's 4000 inside.
+[[services]]
+  protocol = "tcp"
+  internal_port = 4000
+  auto_stop_machines = "off"
+  auto_start_machines = false
+  min_machines_running = 1
+
+  [[services.ports]]
+    port = 23
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "60s"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

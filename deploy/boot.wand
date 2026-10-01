@@ -1,0 +1,59 @@
+#!/usr/bin/env wand
+uses {Env, FS.Read, FS.Write, IO, Shell(chmod, git, wand)}
+
+-- How the game starts on Fly. The image holds wand and this file. The
+-- volume at /data holds the game's checkout, and the server runs on it
+-- with --git, so it commits and pushes what the game saves.
+--
+-- Before the server starts, the deploy key goes where ssh reads it, the
+-- checkout is made if the volume has none, and it comes up to the repo.
+-- The server refuses to pull a change to wand.pkg, because a running
+-- driver cannot load a new one. This pull, before the server starts, is
+-- the deploy that brings one in.
+
+import Env
+import FS
+import IO
+import Path
+import Shell
+import Stream
+import String
+
+let repo = "git@github.com:wand-lang/wmd.gg.git"
+
+let checkout = /data/wmd.gg
+
+let ssh = /root/.ssh
+
+let key = Path.join ssh ./id_ed25519
+
+-- The deploy key, from the secret WMD_DEPLOY_KEY, and GitHub's host keys,
+-- so ssh asks nothing.
+let keys! () = (
+  FS.mkdir! ssh;
+  FS.write_file! key "%{String.trim (Env.get! "WMD_DEPLOY_KEY")}\n";
+  Shell.run! $*(chmod 600 %{key});
+  FS.copy! /app/known_hosts (Path.join ssh ./known_hosts)
+)
+
+let checkout! () =
+  if FS.exists? (Path.join checkout ./.git) then
+    match Shell.run (Shell.in_dir checkout $*(git pull --ff-only --quiet)) with
+    | Ok _ -> IO.println "boot: the checkout is up to the repo"
+    | Error why ->
+      IO.println_err
+        "boot: did not pull, and the server starts on the checkout as it is: %{why}"
+  else (
+    Shell.run! $*(git clone --quiet %{repo} %{checkout});
+    IO.println "boot: cloned %{repo}"
+  )
+
+-- The server's output goes to this one's, which is the machine's log. A
+-- stop signal reaches the server too, and this waits while it saves.
+let serve! () =
+  Shell.stream (Shell.in_dir checkout $*(wand github.com/wand-lang/wmd/wmd --git))
+  |> Stream.each IO.println
+
+keys! ()
+checkout! ()
+serve! ()
