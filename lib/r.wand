@@ -42,7 +42,8 @@ let _room (ctx: Driver.Context) =
   let exits = Map.keys (w.exits_of ctx.here);
   let lines =
     List.flatten [
-      [w.short_of ctx.here, w.long_of ctx.here],
+      -- A blank line first, so the room stands apart from what was typed.
+      ["", w.short_of ctx.here, w.long_of ctx.here],
       if things == [] then []
       else ["You see %{Text.listing (List.map (fn o -> Text.a (w.short_of o)) things)}."],
       [_way_out w ctx.here exits],
