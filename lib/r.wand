@@ -40,19 +40,21 @@ let _room (ctx: Driver.Context) =
   let people = List.filter w.player? here;
   let things = List.filter (fn o -> !(w.player? o)) here;
   let exits = Map.keys (w.exits_of ctx.here);
+  -- Whoever may edit the room sees which file it is, after its name.
+  let title =
+    if w.may_edit? ctx.actor file then "%{w.short_of ctx.here} (%{file})"
+    else w.short_of ctx.here;
   let lines =
     List.flatten [
       -- A blank line first, so the room stands apart from what was typed.
-      ["", w.short_of ctx.here, w.long_of ctx.here],
+      ["", title, w.long_of ctx.here],
       if things == [] then []
       else ["You see %{Text.listing (List.map (fn o -> Text.a (w.short_of o)) things)}."],
       [_way_out w ctx.here exits],
       List.map
         (fn p -> if w.awake? p then "%{w.short_of p} is here."
           else "%{w.short_of p} is here, asleep.")
-        people,
-      -- Whoever may edit the room sees which file it is.
-      if w.may_edit? ctx.actor file then ["File: %{file}"] else []
+        people
     ];
   Driver.tell ctx (String.join "\n" lines)
 
