@@ -1,0 +1,24 @@
+uses {Random}
+
+-- The Rules realm: the Rules Hall, where an account that has not signed the
+-- current rules wakes. Only reading, signing, help and leaving work here,
+-- and only its objects may say that the rules were signed.
+
+import List
+
+let Driver = import github.com/wand-lang/wmd/driver
+let Realm = import ../std/realm
+
+-- The commands that work before the rules are signed.
+let _open = ["look", "l", "read", "sign", "/help", "/quit"]
+
+implement Driver.Blueprint =
+  let create _ _ = Driver.Init(object = Realm.object "the Rules realm" [])
+
+implement Driver.Realm =
+  let commands _ verb = if List.any? (fn v -> v == verb) _open then Ok()
+  else Error "First read the rules on the wall, then sign them: sign rules.";
+  let allows = Realm.anything;
+  let allowed = Driver.Everyone;
+  let contracts = [];
+  let charter = Realm.no_charter

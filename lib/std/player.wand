@@ -1,0 +1,129 @@
+uses {Random}
+
+-- A player's body. The everyday commands that are about the player are
+-- verbs here, and `look` and `go` are the Commons', so anyone can read how
+-- they work. The driver only parses a line, matches it to a verb and
+-- applies the actions the verb gives back.
+
+import JSON
+import List
+import Map
+import Option
+import Result
+import String
+
+let Driver = import github.com/wand-lang/wmd/driver
+let Text = import ./text
+
+type State(name: String = "someone")
+
+-- The people already in `room`, who see someone arrive.
+let _in (ctx: Driver.Context) room = List.filter ctx.world.player? (ctx.world.contents room)
+
+-- ── home ───────────────────────────────────────────────────────────────
+
+let _home (s: State) (ctx: Driver.Context) _ =
+  let home = ctx.world.home_of ctx.actor;
+  if home == ctx.here then Driver.tell ctx "You are home already."
+  else Driver.Reply(
+    actions = List.flatten [
+      List.map (fn o -> Driver.Tell o "%{s.name} goes home.") (Text.others ctx),
+      List.map (fn o -> Driver.Tell o "%{s.name} comes home.") (_in ctx home),
+      [Driver.Move ctx.actor home]
+    ]
+  )
+
+-- ── talk ───────────────────────────────────────────────────────────────
+
+let _say (s: State) (ctx: Driver.Context) (p: Driver.Parsed) =
+  if p.rest == "" then Driver.tell ctx "Say what?"
+  else Driver.Reply(
+    actions = Text.act ctx `You say "%{p.rest}"` `%{s.name} says "%{p.rest}"`
+  )
+
+-- `pose sits down.` shows "Ann sits down." to everyone, Ann too.
+let _pose (s: State) (ctx: Driver.Context) (p: Driver.Parsed) =
+  if p.rest == "" then Driver.tell ctx "Pose what?"
+  else Driver.Reply(actions = Text.act ctx "%{s.name} %{p.rest}" "%{s.name} %{p.rest}")
+
+-- `semipose 's cat purrs.` shows "Ann's cat purrs.": no space after the name.
+let _semipose (s: State) (ctx: Driver.Context) (p: Driver.Parsed) =
+  if p.rest == "" then Driver.tell ctx "Semipose what?"
+  else Driver.Reply(actions = Text.act ctx "%{s.name}%{p.rest}" "%{s.name}%{p.rest}")
+
+-- ── socials ────────────────────────────────────────────────────────────
+
+-- A social is a short action with a fixed text: what the actor sees, what
+-- the room sees, and, `at` someone, what that one sees.
+type Social(you: String, them: String)
+
+let _socials = Map.from_list [
+  ("smile", Social(you = "smile", them = "smiles")),
+  ("grin", Social(you = "grin", them = "grins")),
+  ("laugh", Social(you = "laugh", them = "laughs")),
+  ("nod", Social(you = "nod", them = "nods")),
+  ("wave", Social(you = "wave", them = "waves")),
+  ("bow", Social(you = "bow", them = "bows")),
+  ("shrug", Social(you = "shrug", them = "shrugs")),
+  ("sigh", Social(you = "sigh", them = "sighs")),
+  ("frown", Social(you = "frown", them = "frowns")),
+  ("wink", Social(you = "wink", them = "winks"))
+]
+
+-- `wave` or `wave at Bo`. Bo sees "Ann waves at you.".
+let _social (s: State) (ctx: Driver.Context) (p: Driver.Parsed) =
+  match Map.get p.verb _socials with
+  | None -> Driver.nothing
+  | Some so -> (
+    let target =
+      (match p.iobj with
+       | Some o -> Some o
+       | None -> p.dobj);
+    match target with
+    | None when p.prep == Some "at" ->
+      Driver.tell
+        ctx
+        "You don't see a '%{String.trim (String.slice 3 (String.length p.rest) p.rest)}' here."
+    | None -> Driver.Reply(actions = Text.act ctx "You %{so.you}." "%{s.name} %{so.them}.")
+    | Some t when t == ctx.actor -> Driver.Reply(
+      actions =
+        Text.act ctx "You %{so.you} at yourself." "%{s.name} %{so.them} at themself."
+    )
+    | Some t -> (
+      let name = ctx.world.short_of t;
+      Driver.Reply(
+        actions =
+          Driver.Tell ctx.actor "You %{so.you} at %{name}." :: List.map
+            (fn o -> Driver.Tell
+              o
+              (if o == t then "%{s.name} %{so.them} at you."
+              else "%{s.name} %{so.them} at %{name}."))
+            (Text.others ctx)
+      )
+    )
+  )
+
+-- ── the body ───────────────────────────────────────────────────────────
+
+let _verb names run = Driver.Verb(names, run)
+
+let make (s: State) =
+  Driver.Object(
+    names = [String.lower s.name],
+    short = fn _ -> s.name,
+    long = fn _ -> "%{s.name} looks like a person.",
+    verbs = [
+      _verb ["say"] (_say s),
+      _verb ["pose"] (_pose s),
+      _verb ["semipose"] (_semipose s),
+      _verb ["home"] (_home s),
+      _verb (Map.keys _socials) (_social s)
+    ],
+    save = fn () -> State.encoder s
+  )
+
+-- The driver spawns a body with its name already in `saved`.
+implement Driver.Blueprint =
+  let create _ saved = match saved with
+  | None -> Driver.Init(object = make State())
+  | Some j -> Driver.Init(object = make (Result.get! (JSON.decode State.decoder j)))

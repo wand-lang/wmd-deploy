@@ -1,0 +1,4 @@
+# The module /eval writes while it loads.
+lib/.eval/
+# The event log, one JSON Lines file per day.
+logs/

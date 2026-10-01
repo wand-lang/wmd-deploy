@@ -1,0 +1,19 @@
+-- Rooms. A room file starts from `room` and changes what it needs with
+-- record update:
+--
+--   Driver.Object(Room.room "The Garden" "A small walled garden.",
+--     exits = {south = Room.exit "/r/square"})
+
+import JSON
+
+let Driver = import github.com/wand-lang/wmd/driver
+
+-- A description that never changes.
+let text s = fn (_: Driver.Context) -> s
+
+-- An exit with the default messages and no check.
+let exit to = Driver.Exit(to = to)
+
+-- A room with no exits and nothing to save.
+let room short long =
+  Driver.Object(names = [], short = text short, long = text long, save = fn () -> JSON.null)

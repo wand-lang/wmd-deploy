@@ -1,0 +1,20 @@
+uses {Random}
+
+-- The room of lesson 2. Its example is the lever in it.
+
+let Driver = import github.com/wand-lang/wmd/driver
+let Room = import ../../std/room
+
+let levers =
+  Driver.Object(
+    Room.room
+      "Lesson 2: The Lever Room"
+      "A bare room with a brass lever in the middle of the floor. Pull it, then /examine lever to see what it keeps. Read /help lesson2, then /copy lever to make it yours.",
+    exits = {hall = Room.exit "/r/learning/hall"}
+  )
+
+-- A new room gets its lever. A restored one already has it.
+implement Driver.Blueprint =
+  let create self saved = match saved with
+  | None -> Driver.Init(object = levers, actions = [Driver.Spawn "/r/learning/lever" self])
+  | Some _ -> Driver.Init(object = levers)

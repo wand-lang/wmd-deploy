@@ -1,0 +1,43 @@
+uses {Random}
+
+-- The Rules Hall: where an account that has not signed the current rules
+-- wakes. Its description is the rules, and `sign rules` is the way out.
+
+import JSON
+import Option
+
+let Driver = import github.com/wand-lang/wmd/driver
+
+let _rules (ctx: Driver.Context) =
+  Option.default
+    "The rules should be written here, but the wall is blank. Tell a Keymaster."
+    (ctx.world.help_of "rules")
+
+let hall =
+  Driver.Object(
+    names = [],
+    short = fn _ -> "The Rules Hall",
+    long = fn ctx -> `
+A quiet hall. The rules are written on the wall:
+
+%{_rules ctx}
+
+When you have read them, type: sign rules`,
+    verbs = [
+      Driver.Verb(names = ["read"], run = fn ctx _ -> Driver.tell ctx (_rules ctx)),
+      Driver.Verb(
+        names = ["sign"],
+        run = fn ctx p -> if p.rest != "rules" then Driver.tell ctx "Type: sign rules"
+          else Driver.Reply(
+            actions = [
+              Driver.Tell ctx.actor "You sign the rules. Thank you, and welcome.",
+              Driver.Acknowledge ctx.actor
+            ]
+          )
+      )
+    ],
+    save = fn () -> JSON.null
+  )
+
+implement Driver.Blueprint =
+  let create _ _ = Driver.Init(object = hall)

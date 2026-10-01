@@ -1,0 +1,17 @@
+uses {Random}
+
+-- Behind the green door of lesson 4.
+
+let Driver = import github.com/wand-lang/wmd/driver
+let Room = import ../../std/room
+
+let cupboard =
+  Driver.Object(
+    Room.room
+      "A Cupboard"
+      "A cupboard full of brooms. You made it through the door in time. Go out to go back.",
+    exits = {out = Room.exit "/r/learning/doors"}
+  )
+
+implement Driver.Blueprint =
+  let create _ _ = Driver.Init(object = cupboard)

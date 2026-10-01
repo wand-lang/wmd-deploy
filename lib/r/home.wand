@@ -1,0 +1,18 @@
+uses {Random}
+
+-- The Home realm: every Citizen's home, as /r/home/ann/ for ann. Its
+-- charter, in the Commons, gives each Citizen the files in their own home.
+
+let Driver = import github.com/wand-lang/wmd/driver
+let Realm = import ../std/realm
+
+implement Driver.Blueprint =
+  let create _ _ = Driver.Init(object = Realm.object "the Home realm" [])
+
+implement Driver.Realm =
+  let commands = Realm.anything;
+  let allows = Realm.anything;
+  -- A Citizen's new room is private until they make it public.
+  let allowed = Driver.Only [];
+  let contracts = [];
+  let charter = Realm.no_charter

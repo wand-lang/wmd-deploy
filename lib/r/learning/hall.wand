@@ -1,0 +1,25 @@
+uses {Random}
+
+-- The Learning Hall: the way into the lessons, west of the Commons.
+
+let Driver = import github.com/wand-lang/wmd/driver
+let Room = import ../../std/room
+
+let hall =
+  Driver.Object(
+    Room.room
+      "The Learning Hall"
+      "A long hall with six doors, numbered one to six. Behind each door is a lesson in building with Wand, and a working example to try. Type /help guide to begin, then go one.",
+    exits = {
+      east = Room.exit "/r/square",
+      one = Room.exit "/r/learning/hours",
+      two = Room.exit "/r/learning/levers",
+      three = Room.exit "/r/learning/cats",
+      four = Room.exit "/r/learning/doors",
+      five = Room.exit "/r/learning/orcs",
+      six = Room.exit "/r/learning/cave"
+    }
+  )
+
+implement Driver.Blueprint =
+  let create _ _ = Driver.Init(object = hall)
