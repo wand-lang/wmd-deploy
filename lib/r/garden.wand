@@ -9,7 +9,8 @@ let garden =
     exits = {south = Room.exit "/r/square"},
     details = {
       wall = Room.text "Old brick, warm from the sun, with moss in the joints.",
-      path = Room.text "Gravel, raked smooth."
+      path = Room.text "Gravel, raked smooth.",
+      robin = Room.text "A small brown bird with a red breast. It hops along the path, and keeps one eye on you."
     },
     -- A robin looks up at whoever comes in.
     on_enter = Some (fn (ctx: Driver.Context) who ->
