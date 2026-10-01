@@ -71,12 +71,13 @@ let _detail (ctx: Driver.Context) words = (
 -- sees into a private room, or one they are banned from.
 let _through (ctx: Driver.Context) (e: Driver.Exit) = (
   let w = ctx.world;
+  -- A view starts with a blank line, as a room does.
   match e.view with
-  | Some v -> Driver.tell ctx v
+  | Some v -> Driver.tell ctx "\n%{v}"
   | None -> if !(w.may_enter? ctx.actor e.to) then
       Driver.tell ctx "A force hides what lies that way."
     else if !(w.made? e.to) then Driver.tell ctx "You can't make out what lies that way."
-    else Driver.tell ctx "%{w.short_of e.to}\n%{w.long_of e.to}"
+    else Driver.tell ctx "\n%{w.short_of e.to}\n%{w.long_of e.to}"
 )
 
 -- `look`, `look lever`, `look at lever`, `look at window`, and `look east`.
