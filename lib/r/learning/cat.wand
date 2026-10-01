@@ -29,7 +29,7 @@ let _wander (ctx: Driver.Context) =
   match Random.choose (_ways ctx) with
   | Some(name, e) -> Driver.Reply(
     actions = [
-      Driver.Say "The grey cat pads off to the %{name}.",
+      Driver.Say "The grey cat pads off to the %{Driver.name_of name}.",
       Driver.Move ctx.self e.to,
       Driver.Say "A grey cat pads in and looks around."
     ]

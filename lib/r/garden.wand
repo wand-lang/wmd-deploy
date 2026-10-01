@@ -3,17 +3,18 @@ uses {Random}
 let Driver = import github.com/wand-lang/wmd/driver
 let Room = import ../std/room
 
-let room =
-  Room.room "The Garden" "A small walled garden. A path leads back south to the Commons."
+let title = "The Garden"
 
-let exits = {south = Room.exit "/r/square"}
+let description = "A small walled garden. A path leads back south to the Commons."
 
-let details = {
+let noticeable = {
   wall = Room.text "Old brick, warm from the sun, with moss in the joints.",
   path = Room.text "Gravel, raked smooth.",
   robin = Room.text
     "A small brown bird with a red breast. It hops along the path, and keeps one eye on you."
 }
+
+let exits = {"s*outh" = Room.exit "/r/square"}
 
 -- A robin looks up at whoever comes in.
 let on_enter =
@@ -22,7 +23,13 @@ let on_enter =
       Driver.Reply(actions = [Driver.Tell who "A robin looks up at you from the path."])
     else Driver.nothing)
 
-let garden = Driver.Object(room, exits = exits, details = details, on_enter = on_enter)
+let garden =
+  Driver.Object(
+    Room.room title description,
+    exits = exits,
+    details = noticeable,
+    on_enter = on_enter
+  )
 
 implement Driver.Blueprint =
   let create _ _ = Driver.Init(object = garden)
