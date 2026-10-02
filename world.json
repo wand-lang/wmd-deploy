@@ -14,6 +14,20 @@
       "notices": [],
       "paused": false,
       "banned": []
+    },
+    {
+      "name": "Adent",
+      "body": "/std/player#1",
+      "password": "hmac-sha256$46c35043c5c6356328f6f2feeed1cec7$9ca72ce2016609b575433c06fb0ad3c59ef63d31cd010f530e0e65e289b31a52",
+      "role": "citizen",
+      "created": "2026-10-02T16:46:27Z",
+      "last_seen": "2026-10-02T16:49:20Z",
+      "inspiration": { "amount": 1000, "at": "1970-01-01T00:00:00Z" },
+      "explored": {},
+      "rules": { "version": 1, "at": "2026-10-02T16:46:54Z" },
+      "notices": [],
+      "paused": false,
+      "banned": []
     }
   ],
   "instances": [
@@ -22,7 +36,7 @@
       "blueprint": "/std/login",
       "state": null,
       "created": "2026-10-01T22:27:45Z",
-      "modified": "2026-10-02T16:43:49Z",
+      "modified": "2026-10-02T16:58:49Z",
       "public": true,
       "invited": [],
       "locked": true,
@@ -271,6 +285,18 @@
       "blueprint": "/r/learning/seconds",
       "state": null,
       "created": "2026-10-02T11:36:04Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/std/player#1",
+      "blueprint": "/std/player",
+      "env": "/r/learning/hall#0",
+      "state": { "name": "Adent" },
+      "created": "2026-10-02T16:46:27Z",
+      "owner": "adent",
       "public": true,
       "invited": [],
       "locked": true,
