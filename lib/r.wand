@@ -47,8 +47,12 @@ let _beyond (w: Driver.WorldView) actor (e: Driver.Exit) =
   | None -> if w.may_enter? actor e.to && w.made? e.to then Some (w.short_of e.to) else None
 
 -- A view as a sentence of its own: "Door one, with a loud tick behind it."
+-- A view that ends a sentence already, as one /approve writes, keeps its
+-- own stop.
 let _sentence phrase =
-  "%{String.upper (String.slice 0 1 phrase)}%{String.slice 1 (String.length phrase) phrase}."
+  let stop =
+    if List.any? (fn p -> String.ends_with? p phrase) [".", "!", "?"] then "" else ".";
+  "%{String.upper (String.slice 0 1 phrase)}%{String.slice 1 (String.length phrase) phrase}%{stop}"
 
 -- The paragraph about a room's exits. Each direction past which something
 -- can be seen has a sentence, as "To the north you see The Garden.", in
