@@ -56,11 +56,6 @@ let _pose (s: State) (ctx: Driver.Context) (p: Driver.Parsed) =
     )
   )
 
--- `semipose 's cat purrs.` shows "Ann's cat purrs.": no space after the name.
-let _semipose (s: State) (ctx: Driver.Context) (p: Driver.Parsed) =
-  if p.rest == "" then Driver.tell ctx "Semipose what?"
-  else Driver.Reply(actions = Text.act ctx "%{s.name}%{p.rest}" "%{s.name}%{p.rest}")
-
 -- ── socials ────────────────────────────────────────────────────────────
 
 -- A social is a short action with a fixed text: what the actor sees, what
@@ -125,7 +120,6 @@ let make (s: State) =
     verbs = [
       _verb ["say"] (_say s),
       _verb ["pose"] (_pose s),
-      _verb ["semipose"] (_semipose s),
       _verb ["home"] (_home s),
       _verb (Map.keys _socials) (_social s)
     ],
