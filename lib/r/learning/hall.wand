@@ -13,7 +13,7 @@ let hall =
     exits = {
       "e*ast" = Room.exit "/r/square",
       -- What `look one` shows: a hint of the lesson behind each door.
-      one = Driver.Exit(Room.exit "/r/learning/hours", view = Some "door one, with a loud tick behind it"),
+      one = Driver.Exit(Room.exit "/r/learning/seconds", view = Some "door one, with a loud tick behind it"),
       two = Driver.Exit(
         Room.exit "/r/learning/levers",
         view = Some "door two, and through its keyhole the glint of a brass lever"
