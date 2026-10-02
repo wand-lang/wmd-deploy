@@ -22,7 +22,7 @@
       "blueprint": "/std/login",
       "state": null,
       "created": "2026-10-01T22:27:45Z",
-      "modified": "2026-10-02T11:35:09Z",
+      "modified": "2026-10-02T11:50:01Z",
       "public": true,
       "invited": [],
       "locked": true,
@@ -146,16 +146,6 @@
       "held": false
     },
     {
-      "id": "/r/learning/hours#0",
-      "blueprint": "/r/learning/hours",
-      "state": null,
-      "created": "2026-10-01T22:37:18Z",
-      "public": true,
-      "invited": [],
-      "locked": true,
-      "held": false
-    },
-    {
       "id": "/r/learning/levers#0",
       "blueprint": "/r/learning/levers",
       "state": null,
@@ -271,6 +261,16 @@
       "blueprint": "/r/learning/cupboard",
       "state": null,
       "created": "2026-10-01T23:03:27Z",
+      "public": true,
+      "invited": [],
+      "locked": true,
+      "held": false
+    },
+    {
+      "id": "/r/learning/seconds#0",
+      "blueprint": "/r/learning/seconds",
+      "state": null,
+      "created": "2026-10-02T11:36:04Z",
       "public": true,
       "invited": [],
       "locked": true,
