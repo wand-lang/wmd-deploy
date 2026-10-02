@@ -1,9 +1,9 @@
 { package = github.com/wand-lang/wmd.gg
 , wand    = 0.100.0
 , require =
-    [ { path = github.com/wand-lang/wmd, version = 0.3.3 }
+    [ { path = github.com/wand-lang/wmd, version = 0.3.4 }
     ]
 }
 
 -- DO NOT EDIT: sum, written by `wand p`
-https://github.com/wand-lang/wmd 0.3.3 sha256:71935a4b39439227f43d9e1310be0120dc3f6a1405f233a6799edc83e4583d55
+https://github.com/wand-lang/wmd 0.3.4 sha256:4b40645fd581cd404913423cdd3a1e322ab736bef1d1dfd174a11d513c347f28
