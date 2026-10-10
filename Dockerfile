@@ -7,7 +7,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # The wand that runs the game. wand.pkg names the oldest one it accepts.
-ARG WAND_VERSION=0.101.0
+ARG WAND_VERSION=0.104.0
 RUN curl -fsSL https://raw.githubusercontent.com/wand-lang/wand/main/install.sh \
   | WAND_VERSION=$WAND_VERSION WAND_INSTALL_DIR=/usr/local/bin sh
 
