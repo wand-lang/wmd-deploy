@@ -36,7 +36,7 @@
       "blueprint": "/std/login",
       "state": null,
       "created": "2026-10-01T22:27:45Z",
-      "modified": "2026-10-14T09:11:26Z",
+      "modified": "2026-10-14T09:26:26Z",
       "public": true,
       "invited": [],
       "locked": true,
@@ -194,7 +194,7 @@
     {
       "id": "/r/learning/cat#0",
       "blueprint": "/r/learning/cat",
-      "env": "/r/learning/cupboard#0",
+      "env": "/r/learning/levers#0",
       "state": null,
       "creator": "/r/learning/cats#0",
       "created": "2026-10-01T22:37:18Z",
